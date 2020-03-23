@@ -47,18 +47,18 @@ module.exports = {
     );
     const aql = sails.config.db.aql;
     const db = sails.config.db.instance();
-    const cursor = await db.query(aql`UPSERT {
+    const cursor = await db.query(aql`
+      UPSERT {
         email: ${inputs.email}
-    }
-    INSERT ${{ ...inputs, timestamp: _.now() }}
-    UPDATE {
-    }
-    IN Users
-    
-    RETURN {
+      }
+      INSERT ${{ ...inputs, timestamp: _.now() }}
+      UPDATE {} IN Users
+      
+      RETURN {
         info: NEW,
         alreadyExists: OLD
-    }`);
+      }
+    `);
     const res = await cursor.all();
     const user = res[0];
     db.close();

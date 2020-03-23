@@ -34,9 +34,11 @@ module.exports = {
     );
     const aql = sails.config.db.aql;
     const db = sails.config.db.instance();
-    const cursor = await db.query(aql`FOR doc IN Users
+    const cursor = await db.query(aql`
+      FOR doc IN Users
       FILTER doc.email == ${inputs.email} AND doc.password == ${inputs.password}
-      RETURN doc`);
+      RETURN doc
+    `);
     const res = await cursor.all();
     db.close();
     // if user not found or incorrect password

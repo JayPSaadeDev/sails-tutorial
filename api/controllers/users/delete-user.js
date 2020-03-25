@@ -26,13 +26,14 @@ module.exports = {
 
     // if key is a valid number, then proceed to execute query
     if (!_.isNaN(key)) {
-        key = key.toString(10)
+      key = key.toString(10);
       // deletes the user if the key is found and the user is not an admin
-      const cursor = await db.query(aql`For u IN Users
-            FILTER u.isAdmin != true && u._key == ${key}
-            REMOVE u IN Users
-            RETURN OLD._key
-            `);
+      const cursor = await db.query(aql`
+        For u IN Users
+        FILTER u.isAdmin != true && u._key == ${key}
+        REMOVE u IN Users
+        RETURN OLD._key
+      `);
 
       const res = await cursor.all();
       db.close();

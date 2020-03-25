@@ -32,15 +32,17 @@ module.exports = function defineGetUserInfoHook(sails) {
             if (req.session.userId) {
               const db = sails.config.db.instance();
               const aql = sails.config.db.aql;
-              const cursor = await db.query(aql`FOR doc IN Users
-              FILTER doc._id == ${req.session.userId}
-              RETURN doc`);
+              const cursor = await db.query(aql`
+                FOR doc IN Users
+                FILTER doc._id == ${req.session.userId}
+                RETURN doc
+              `);
               const res = await cursor.all();
 
               // if user is not found
               if (res.length === 0) {
                 sails.log.warn(
-                  "Hmmm, it seems that the requested id couldn't be found in the db"
+                  `Hmmm, it seems that the requested id ${req.session.userIds} couldn't be found in the db`
                 );
                 delete req.session.userId;
                 return next();

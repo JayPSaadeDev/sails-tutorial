@@ -16,5 +16,6 @@ module.exports.routes = {
   'get /users': 'users.get-users',
   'delete /users/:key': 'users.delete-user',
 
-  'post /friends/add': 'friends.add-friend'
+  'post /friends/add': 'friends.add-friend',
+  'post /friends/remove': 'friends.remove-friend',
 };

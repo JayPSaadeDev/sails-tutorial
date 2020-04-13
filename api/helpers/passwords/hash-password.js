@@ -1,3 +1,5 @@
+const md5 = require('md5');
+
 module.exports = {
   friendlyName: 'Hashes a password using md5',
 
@@ -6,18 +8,17 @@ module.exports = {
   inputs: {
     password: {
       type: 'string',
-      description: 'Not hashed password'
-    }
+      description: 'Not hashed password',
+    },
   },
 
   exits: {
     success: {
-      description: 'Password is hashed successfully'
-    }
+      description: 'Password is hashed successfully',
+    },
   },
 
-  fn: async function(inputs, exits) {
-    const md5 = require('md5');
-    exits.success(md5(inputs.password));
-  }
+  fn: async function (inputs, exits) {
+    return exits.success(md5(inputs.password));
+  },
 };

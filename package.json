@@ -7,6 +7,7 @@
   "dependencies": {
     "@sailshq/lodash": "^3.10.3",
     "arangojs": "^6.13.0",
+    "jsonwebtoken": "^8.5.1",
     "md5": "^2.2.1",
     "sails": "^1.2.3",
     "sails-arangodb": "^0.2.3",

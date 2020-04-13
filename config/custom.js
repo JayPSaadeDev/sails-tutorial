@@ -17,7 +17,7 @@ module.exports.custom = {
   // mailgunSecret: 'key-testkeyb183848139913858e8abd9a3',
   // stripeSecret: 'sk_test_Zzd814nldl91104qor5911gjald',
   // …
-
+  JWT_SECRET: 'OuuuuuSecret',
   DEFAULT_PAGINATION_OFFSET: 0,
   DEFAULT_PAGINATION_SIZE: 10
 };

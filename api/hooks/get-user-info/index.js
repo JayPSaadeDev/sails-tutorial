@@ -1,7 +1,10 @@
 /**
  * get-user-info hook
  *
- * @description :: A hook definition.  Extends Sails by adding shadow routes, implicit actions, and/or initialization logic.
+ * @description :: This hook runs before each route, checking if there's a token in the 'Authorization' header,
+ * if a token exists, then verify the token using 'jsonwebtoken' library; if the token is valid then proceeds to fetch the user data from the db.
+ * if a token doesn't exist, proceeds normally.
+ *
  * @docs        :: https://sailsjs.com/docs/concepts/extending-sails/hooks
  */
 
@@ -10,7 +13,7 @@ module.exports = function defineGetUserInfoHook(sails) {
     /**
      * Runs when this Sails app loads/lifts.
      */
-    initialize: async function() {
+    initialize: async function () {
       /**
        * Nothing to do on initialization
        */
@@ -27,40 +30,12 @@ module.exports = function defineGetUserInfoHook(sails) {
        */
       before: {
         '/*': {
-          fn: async function(req, res, next) {
-            // checking if user is logged in
-            if (req.session.userId) {
-              const db = sails.config.db.instance();
-              const aql = sails.config.db.aql;
-              const cursor = await db.query(aql`
-                FOR doc IN Users
-                FILTER doc._id == ${req.session.userId}
-                RETURN doc
-              `);
-              const res = await cursor.all();
-
-              // if user is not found
-              if (res.length === 0) {
-                sails.log.warn(
-                  `Hmmm, it seems that the requested id ${req.session.userIds} couldn't be found in the db`
-                );
-                delete req.session.userId;
-                return next();
-              }
-
-              // else fill req.me with sanitized user
-              const sanitizedUser = _.extend({}, res[0]);
-              delete sanitizedUser.password;
-
-              req.me = sanitizedUser;
-              return next();
-            } else {
-              // if user is not logged in, then proceed normally
-              return next();
-            }
-          }
-        }
-      }
-    }
+          fn: async function (req, res, next) {
+            await sails.helpers.auth.verifyJwt(req);
+            return next();
+          },
+        },
+      },
+    },
   };
 };

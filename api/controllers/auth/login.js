@@ -11,24 +11,24 @@ module.exports = {
       type: 'string',
       description: "User's email, duh..",
       isEmail: true,
-      required: true
+      required: true,
     },
 
     password: {
       type: 'string',
       description: "User's password without hashing",
       minLength: 6,
-      required: true
-    }
+      required: true,
+    },
   },
 
   exits: {
     wrongCredentials: {
       statusCode: 421,
-      description: 'Wrong credentials'
-    }
+      description: 'Wrong credentials',
+    },
   },
-  fn: async function(inputs, exits) {
+  fn: async function (inputs, exits) {
     inputs.password = await sails.helpers.passwords.hashPassword(
       inputs.password
     );
@@ -46,9 +46,9 @@ module.exports = {
       throw 'wrongCredentials';
     }
 
+    const user = res[0]
     // else success
-    // TODO: add JWT Authentication
-    this.req.session.userId = res[0]._id;
-    return exits.success();
-  }
+    const token = await sails.helpers.auth.createJwt(user._id);
+    return exits.success({token});
+  },
 };

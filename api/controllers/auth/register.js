@@ -11,37 +11,37 @@ module.exports = {
       type: 'string',
       description: "User's email, duh..",
       isEmail: true,
-      required: true
+      required: true,
     },
 
     password: {
       type: 'string',
       description: "User's password without hashing",
       minLength: 6,
-      required: true
+      required: true,
     },
 
     name: {
       type: 'string',
       description: "User's full name",
       required: true,
-      maxLength: 255
+      maxLength: 255,
     },
 
     isAdmin: {
       type: 'boolean',
-      description: 'Set to true if user is an admin (just for fun)'
-    }
+      description: 'Set to true if user is an admin (just for fun)',
+    },
   },
 
   exits: {
     userAlreadyExists: {
       statusCode: 420,
-      description: 'User with the same email already exists'
-    }
+      description: 'User with the same email already exists',
+    },
   },
 
-  fn: async function(inputs, exits) {
+  fn: async function (inputs, exits) {
     inputs.password = await sails.helpers.passwords.hashPassword(
       inputs.password
     );
@@ -66,10 +66,8 @@ module.exports = {
     if (!_.isEmpty(user.alreadyExists)) {
       throw 'userAlreadyExists';
     }
-
     // else success
-    // TODO: add JWT Authentication
-    this.req.session.userId = user.info._id;
-    return exits.success();
-  }
+    const token = await sails.helpers.auth.createJwt(user.info._id);
+    return exits.success({token});
+  },
 };

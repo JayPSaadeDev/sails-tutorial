@@ -12,9 +12,10 @@ module.exports.routes = {
   'post /register': 'auth.register',
   'post /login': 'auth.login',
 
-  'put /edit': 'users.update-user',
   'get /users': 'users.get-users',
   'delete /users/:key': 'users.delete-user',
+
+  'put /me/edit': 'me.edit',
 
   'post /friends/add': 'friends.add-friend',
   'post /friends/remove': 'friends.remove-friend',
